@@ -10,6 +10,12 @@
 	if (!empty($_SESSION['is_admin']))
   {
     $is_admin = true;
+    if (isset($_POST['logout']))
+			{
+				session_destroy();
+				header('Location: index_1.php');
+				exit;
+			}
     if (!empty($_SESSION['success']))
 		{
 			$success = true;
@@ -40,6 +46,8 @@
     		else
     		{
       		$message = $app->getErrors();
+          $now_editing_task_id = $_POST["task_id"];
+					$now_editing_task_status = isset($_POST["status"]) ? 1 : 0;
     		}
   		}
       $_POST = null;
@@ -50,12 +58,7 @@
       //	App::deleteByIds($_POST['selected']);
       //  $_SESSION['last_time'] = time();
       //}
-      if (isset($_POST['logout']))
-			{
-				session_destroy();
-				header('Location: index_1.php');
-				exit;
-			}
+      
     }
     
     if ($_GET)
@@ -167,6 +170,9 @@
           button{
             font-size: 15px;
           }
+          h2, h1{
+          	color: #0095B6;
+          }
         </style>
     </head>  
     <body>
@@ -214,7 +220,7 @@
           <?php echo "<span class='filter_element' value='" . $key . "'" . (strcmp(($_GET['when'] ?? ''), $key) ? '' : ' style="color: #0095B6; text-decoration: underline;"') . ">" . $value . "</span>"; ?>
           <?php } ?>
           <form method="POST">
-				    <table border="1">
+				    <table border="1" class="list_cont_tasks__table" <?= "data__now_editing_task_id='" . $now_editing_task_id . "'" ?> <?= "data__now_editing_task_status='" . $now_editing_task_status . "'" ?> >
 					    <thead>
 						    <tr>
 						  	  <th>Название</th>
